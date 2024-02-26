@@ -1,6 +1,3 @@
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
-
 const images = [
   {
     preview:
@@ -67,39 +64,51 @@ const images = [
   },
 ];
 
-const gallery = document.querySelector(".gallery");
+// Описаний в документації
+import SimpleLightbox from "simplelightbox";
+// Додатковий імпорт стилів
+import "simplelightbox/dist/simple-lightbox.css";
 
-const galleryHTML = images.map(el => {
-  return `<li class="gallery-item">
-        <a class="gallery-link" href="${el.original}">
-            <img
-                class="gallery-image"
-                src="${el.preview}"
-                data-source="${el.original}"
-                alt="${el.description}"
-            />
-        </a>
-    </li>`
-}).join("");
+const container = document.querySelector(".gallery");
 
-gallery.insertAdjacentHTML("afterbegin", galleryHTML);
+function createImageMarkup({ preview, original, description }) {
+  const markup=`
+<li class="gallery-item">
+  <a class="gallery-link" href="${original}">
+    <img
+      class="gallery-image"
+      src="${preview}"
+      alt="${description}"
+      style="max-width:360px"
+    />
+  </a>
+</li>
+`
+  return markup;
+}
+
+const markup = images.map(createImageMarkup).join('');
+container.innerHTML = markup;
 
 
-const lightbox = new SimpleLightbox('.gallery a', { captionsData: "alt", captionDelay: 250 });
+const lightbox = new SimpleLightbox('.gallery-item a', {//* options */
+captionsData: 'alt',
+  captionDelay: 250,
+  className: 'dark',
+})
 
-lightbox.on('shown.simplelightbox', function () {
-  const overlay = document.querySelector(".sl-overlay");
-  const btnClose = document.querySelector(".sl-close ");
-  const counter = document.querySelector(".sl-counter");
-  const btnArrow = document.querySelectorAll(".sl-navigation button");
-  const overlayImage = document.querySelector(".sl-caption");
+  lightbox.on('shown.simplelightbox', () => {
+    const navigationArrow = document.querySelectorAll(
+      '.sl-wrapper .sl-navigation button'
+    );
+    const closeBtn = document.querySelector('.sl-close');
+    navigationArrow.forEach(item => (item.style.color = '#fff'));
+    closeBtn.style.color = '#fff';
+    const countColor = document.querySelector('.sl-wrapper>.sl-counter');
+    countColor.style.color = '#fff';
+  });
 
-  overlay.style.backgroundColor = "rgb(46, 47, 66)";
-  btnClose.style.color = "#ffffff";
-  btnClose.style.fontSize = "2rem";
-  counter.style.color = "#ffffff";
-  btnArrow.forEach(item => item.style.color = "#ffffff");
-  overlayImage.style.backgroundColor = "rgba(46, 47, 66, 0.80)";
-});
+
+
 
 

@@ -1,0 +1,18 @@
+ul{
+    display: flex;
+    flex-wrap: wrap;
+    gap:24px;
+    margin-top: 8px;
+    justify-content: center;
+}
+.gallery-item{
+    transition: transform 300ms linear;
+}
+.gallery-item:hover{
+    transform: scale(1.03);
+}
+.dark {
+    background-color: rgba(46, 47, 66, 0.8);
+}
+
+

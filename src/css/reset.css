@@ -1,7 +1,4 @@
 /* Reset styles */
-* {
-  box-sizing: border-box;
-}
 h1,
 h2,
 h3,
@@ -25,11 +22,12 @@ ul {
 a {
   color: currentColor;
   text-decoration: none;
+  display: block;
+ 
 }
 
 button {
   cursor: pointer;
-  border: none;
 }
 
 img {
@@ -37,3 +35,5 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+

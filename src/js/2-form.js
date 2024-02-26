@@ -1,31 +1,51 @@
-const form = document.querySelector(".feedback-form");
+const form = document.querySelector('.feedback-form');
+const localStorageKey = 'feedback-form-state';
+//змінні для уведених даних
+let email = '';
+let message = '';
 
-function saveMessageInLocalStorage(event) {
-    const inputForm = {};
-    const email = event.currentTarget.email.value;
-    const message = event.currentTarget.message.value;
-    inputForm.email = email.trim();
-    inputForm.message = message.trim();
-    localStorage.setItem("feedback-form-state", JSON.stringify(inputForm));
+// Перевірка збережених даних у localStorage
+const savedState = JSON.parse(localStorage.getItem(localStorageKey));
+if (savedState) {
+// Заповнення полів форми збереженими даними
+  form.elements.email.value = savedState.email || '';
+  form.elements.message.value = savedState.message || '';
 }
 
+form.addEventListener("input", getInfoForForm);
+const getInfo = {};
 
-if (localStorage.getItem("feedback-form-state")) {
-    const saveMessage = JSON.parse(localStorage.getItem("feedback-form-state"));
-    form.email.value = saveMessage.email;
-    form.message.value = saveMessage.message;
-}
-
-form.addEventListener("input", saveMessageInLocalStorage);
-
-function submitMessage(event) {
-    event.preventDefault();
-    if (form.email.value !== "" && form.message.value !== "") {
-        console.log(JSON.parse(localStorage.getItem("feedback-form-state")));
-        localStorage.removeItem("feedback-form-state");
-        form.reset();
+function getInfoForForm(event) {
+    email = event.currentTarget.elements.email.value.trim();
+    message = event.currentTarget.elements.message.value.trim();
+    if (email === "") {
+        delete getInfo.email;
     }
+    if (message === "") {
+        delete getInfo.message;
+    }
+    if (email) {
+        getInfo.email = email;
+    }
+    if (message) {
+        getInfo.message = message;
+    }
+    localStorage.setItem(localStorageKey, JSON.stringify(getInfo));
 }
 
-form.addEventListener("submit", submitMessage);
-
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+//Перевірка повідомлення
+    if (message === "") {
+        return alert("Please enter a message")
+    }
+//Отримання та реєстрація даних форми
+    const formData = {
+    email: email,
+    message: message,
+    };
+//Виведення результату
+    console.log(formData);
+    localStorage.removeItem(localStorageKey);
+    form.reset();
+})
